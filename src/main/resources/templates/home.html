@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <style>
+       
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        h2 {
+            color: #555;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            border: none;
+            background-color: #5cb85c;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+    </style>
+</head>
+<body>
+<h1>Welcome to the Trivia Game, <span th:text="${user.username}">Player</span>!</h1>
+<p>Your Total Score: <span th:text="${totalScore}">0</span></p> <!-- Display current user's total score -->
+
+<h2>Select Difficulty</h2>
+<form th:action="@{/quiz}" method="get">
+    <input type="radio" id="easy" name="difficulty" value="easy" checked>
+    <label for="easy">Easy</label><br>
+    
+    <input type="radio" id="medium" name="difficulty" value="medium">
+    <label for="medium">Medium</label><br>
+    
+    <input type="radio" id="hard" name="difficulty" value="hard">
+    <label for="hard">Hard</label><br><br>
+    
+    <button type="submit">Start Quiz</button>
+</form>
+
+<h2>Top 10 Players</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Score</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="score : ${topScores}">
+            <td th:text="${score.user.username}">Player Name</td>
+            <td th:text="${score.points}">0</td>
+        </tr>
+    </tbody>
+</table>
+
+<form th:action="@{/logout}" method="post">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+    <button type="submit">Logout</button>
+</form>
+
+</body>
+</html>
