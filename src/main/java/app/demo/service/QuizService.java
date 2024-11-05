@@ -1,6 +1,6 @@
 package app.demo.service;
 
-import app.demo.domain.ApiResponse; // You'll need to create this class
+import app.demo.domain.ApiResponse; 
 import app.demo.domain.Question;
 import app.demo.domain.QuizUser;
 import app.demo.domain.Score;
@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +56,12 @@ public class QuizService {
     }
 
     private void fetchQuestions(String difficulty) {
-        String url = "https://opentdb.com/api.php?amount=100&difficulty=" + difficulty + "&type=boolean"; 
+        String url = UriComponentsBuilder.fromHttpUrl("https://opentdb.com/api.php")
+        .queryParam("amount", 100)
+        .queryParam("difficulty", difficulty)
+        .queryParam("type", "boolean")
+        .toUriString();
+        
         logger.info("Fetching questions from API: {}", url);
         try {
             String response = restTemplate.getForObject(url, String.class);
@@ -85,9 +91,9 @@ public class QuizService {
         return questions.remove(random.nextInt(questions.size()));
     }
 
-    public void saveScore(QuizUser user, int points) {
+    public void saveScore(QuizUser quizUser, int points) {
         // Retrieve the current score of the user
-        Integer currentScore = scoreRepository.getTotalScore(user); // Fetch current score
+        Integer currentScore = scoreRepository.getTotalScore(quizUser); // Fetch current score
 
         // If no score exists, initialize it to zero
         if (currentScore == null) {
@@ -96,7 +102,7 @@ public class QuizService {
 
         // Create a new score entry
         Score score = new Score();
-        score.setUser(user);
+        score.setQuizUser(quizUser);
         score.setPoints(points);
 
         // Save the score for this game session
@@ -105,7 +111,7 @@ public class QuizService {
         // Update the total score for the user
         int newTotalScore = currentScore + points;
   
-        user.setTotalScore(newTotalScore); // Update user's total score
+        quizUser.setTotalScore(newTotalScore); // Update user's total score
     }
 
     public int getQuestionsAnswered() {

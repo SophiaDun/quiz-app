@@ -55,18 +55,24 @@ public class HomeController {
         model.addAttribute("user", quizUserRegistrationDto);
         return "login";
     }
-   @GetMapping("/home")
-     public String home(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model) {
-    QuizUser user = customUserDetails.getQuizUser();
-    List<Score> userScores = scoreRepository.findByUser(user);
-    int totalScore = userScores.stream().mapToInt(Score::getPoints).sum();
-
-    List<Score> topScores = scoreRepository.findTop10ByOrderByPointsDesc();
-    model.addAttribute("user", user);
-    model.addAttribute("totalScore", totalScore);
-    model.addAttribute("topScores", topScores);
-    return "home";
-}
+    @GetMapping("/home")
+    public String getHomePage(Model model, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        // Retrieve the authenticated QuizUser
+        QuizUser user = userDetails.getQuizUser(); // This ensures you are working with the correct user type
+        
+        // Fetch the total score for the authenticated user
+        Integer totalScore = scoreRepository.getTotalScore(user); // Ensure this method handles null
+        List<Score> topScores = scoreRepository.findTop10ByOrderByPointsDesc(); // Fetch top scores
+    
+        // Add attributes to the model for Thymeleaf
+        model.addAttribute("user", user);
+        model.addAttribute("totalScore", totalScore != null ? totalScore : 0); 
+        model.addAttribute("topScores", topScores);
+        
+        return "home"; 
+    }
+    
+    
 
 
 

@@ -28,6 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (quizUser == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
+        
         return new CustomUserDetails(quizUser, Arrays.asList(new SimpleGrantedAuthority("USER")));
     }
 }

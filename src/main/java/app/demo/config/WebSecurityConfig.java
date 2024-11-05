@@ -28,6 +28,7 @@ public class WebSecurityConfig {
 		http
 		.authorizeHttpRequests(authorize -> authorize
         .requestMatchers("/css/**", "/register", "/login", "/h2-console/**").permitAll()
+		.requestMatchers("/quiz/**").authenticated() 
 			.anyRequest().authenticated()
 		)
 		.headers(headers -> headers

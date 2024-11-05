@@ -14,7 +14,7 @@ public class Score {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private QuizUser user;
+    private QuizUser quizUser;
 
     @Column(name = "points", nullable = false)
     private int points;
@@ -22,26 +22,24 @@ public class Score {
     @Column(name = "timestamp", nullable = false)
     private LocalDateTime timestamp;
 
-   
     public Score() {}
 
-    public Score(QuizUser user, int points) {
-        this.user = user;
+    public Score(QuizUser quizUser, int points) {
         this.points = points;
         this.timestamp = LocalDateTime.now();
+        setQuizUser(quizUser); 
     }
 
-  
     public Long getId() {
         return id;
     }
 
-    public QuizUser getUser() {
-        return user;
+    public QuizUser getQuizUser() {
+        return quizUser;
     }
 
-    public void setUser(QuizUser user) {
-        this.user = user;
+    public void setQuizUser(QuizUser quizUser) {
+        this.quizUser = quizUser;
     }
 
     public int getPoints() {
@@ -58,5 +56,10 @@ public class Score {
 
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    @Override
+    public String toString() {
+        return "Score [id=" + id + ", points=" + points + ", timestamp=" + timestamp + "]";
     }
 }

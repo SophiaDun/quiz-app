@@ -5,8 +5,6 @@ public class QuizUserRegistrationDto {
     private String password;
 
 
- 
-
     public QuizUserRegistrationDto(String username, String password) {
         super();
         this.username = username;
